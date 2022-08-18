@@ -1,0 +1,447 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="clinicModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DoctorTbl">
+          <Key>
+            <PropertyRef Name="DocId" />
+          </Key>
+          <Property Name="DocId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DocName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DocPhone" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="DocExp" Type="int" Nullable="false" />
+          <Property Name="DocSpec" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DocGen" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="DocAdd" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="DocDob" Type="date" Nullable="false" />
+          <Property Name="DocPass" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="DocEmail" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="LaboratorianTbl">
+          <Key>
+            <PropertyRef Name="LabId" />
+          </Key>
+          <Property Name="LabId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LabName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LabEmail" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LabPass" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="LabPhone" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LabAddress" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="LabGen" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LabTestTbl">
+          <Key>
+            <PropertyRef Name="TestId" />
+          </Key>
+          <Property Name="TestId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TestName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TestCost" Type="int" Nullable="false" />
+          <Property Name="AddBy" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PatientTbl">
+          <Key>
+            <PropertyRef Name="PatId" />
+          </Key>
+          <Property Name="PatId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PatName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PatPhone" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PatGen" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="PatDob" Type="date" Nullable="false" />
+          <Property Name="PatAdd" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="PatAllergies" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Addby" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PrescriptionTbl">
+          <Key>
+            <PropertyRef Name="PrescId" />
+          </Key>
+          <Property Name="PrescId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Doctor" Type="int" Nullable="false" />
+          <Property Name="Patient" Type="int" Nullable="false" />
+          <Property Name="Medicines" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LabTest" Type="int" Nullable="false" />
+          <Property Name="Cost" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReceptionistTbl">
+          <Key>
+            <PropertyRef Name="RecId" />
+          </Key>
+          <Property Name="RecId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="RecEmail" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="RecAdd" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="RecPhone" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="RecPassword" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <Association Name="Fk1">
+          <End Role="LaboratorianTbl" Type="Self.LaboratorianTbl" Multiplicity="1" />
+          <End Role="LabTestTbl" Type="Self.LabTestTbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LaboratorianTbl">
+              <PropertyRef Name="LabId" />
+            </Principal>
+            <Dependent Role="LabTestTbl">
+              <PropertyRef Name="AddBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk2">
+          <End Role="LabTestTbl" Type="Self.LabTestTbl" Multiplicity="1" />
+          <End Role="PrescriptionTbl" Type="Self.PrescriptionTbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LabTestTbl">
+              <PropertyRef Name="TestId" />
+            </Principal>
+            <Dependent Role="PrescriptionTbl">
+              <PropertyRef Name="LabTest" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk4">
+          <End Role="ReceptionistTbl" Type="Self.ReceptionistTbl" Multiplicity="1" />
+          <End Role="PatientTbl" Type="Self.PatientTbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReceptionistTbl">
+              <PropertyRef Name="RecId" />
+            </Principal>
+            <Dependent Role="PatientTbl">
+              <PropertyRef Name="Addby" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk6">
+          <End Role="PatientTbl" Type="Self.PatientTbl" Multiplicity="1" />
+          <End Role="PrescriptionTbl" Type="Self.PrescriptionTbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PatientTbl">
+              <PropertyRef Name="PatId" />
+            </Principal>
+            <Dependent Role="PrescriptionTbl">
+              <PropertyRef Name="Patient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk7">
+          <End Role="DoctorTbl" Type="Self.DoctorTbl" Multiplicity="1" />
+          <End Role="PrescriptionTbl" Type="Self.PrescriptionTbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DoctorTbl">
+              <PropertyRef Name="DocId" />
+            </Principal>
+            <Dependent Role="PrescriptionTbl">
+              <PropertyRef Name="Doctor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="clinicModelStoreContainer">
+          <EntitySet Name="DoctorTbl" EntityType="Self.DoctorTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LaboratorianTbl" EntityType="Self.LaboratorianTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LabTestTbl" EntityType="Self.LabTestTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PatientTbl" EntityType="Self.PatientTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PrescriptionTbl" EntityType="Self.PrescriptionTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReceptionistTbl" EntityType="Self.ReceptionistTbl" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="Fk1" Association="Self.Fk1">
+            <End Role="LaboratorianTbl" EntitySet="LaboratorianTbl" />
+            <End Role="LabTestTbl" EntitySet="LabTestTbl" />
+          </AssociationSet>
+          <AssociationSet Name="Fk2" Association="Self.Fk2">
+            <End Role="LabTestTbl" EntitySet="LabTestTbl" />
+            <End Role="PrescriptionTbl" EntitySet="PrescriptionTbl" />
+          </AssociationSet>
+          <AssociationSet Name="Fk4" Association="Self.Fk4">
+            <End Role="ReceptionistTbl" EntitySet="ReceptionistTbl" />
+            <End Role="PatientTbl" EntitySet="PatientTbl" />
+          </AssociationSet>
+          <AssociationSet Name="Fk6" Association="Self.Fk6">
+            <End Role="PatientTbl" EntitySet="PatientTbl" />
+            <End Role="PrescriptionTbl" EntitySet="PrescriptionTbl" />
+          </AssociationSet>
+          <AssociationSet Name="Fk7" Association="Self.Fk7">
+            <End Role="DoctorTbl" EntitySet="DoctorTbl" />
+            <End Role="PrescriptionTbl" EntitySet="PrescriptionTbl" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="clinicModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DoctorTbl">
+          <Key>
+            <PropertyRef Name="DocId" />
+          </Key>
+          <Property Name="DocId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DocName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DocPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DocExp" Type="Int32" Nullable="false" />
+          <Property Name="DocSpec" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DocGen" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DocAdd" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DocDob" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DocPass" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DocEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PrescriptionTbls" Relationship="Self.Fk7" FromRole="DoctorTbl" ToRole="PrescriptionTbl" />
+        </EntityType>
+        <EntityType Name="LaboratorianTbl">
+          <Key>
+            <PropertyRef Name="LabId" />
+          </Key>
+          <Property Name="LabId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LabName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LabEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LabPass" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LabPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LabAddress" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LabGen" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="LabTestTbls" Relationship="Self.Fk1" FromRole="LaboratorianTbl" ToRole="LabTestTbl" />
+        </EntityType>
+        <EntityType Name="LabTestTbl">
+          <Key>
+            <PropertyRef Name="TestId" />
+          </Key>
+          <Property Name="TestId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TestName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TestCost" Type="Int32" Nullable="false" />
+          <Property Name="AddBy" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="LaboratorianTbl" Relationship="Self.Fk1" FromRole="LabTestTbl" ToRole="LaboratorianTbl" />
+          <NavigationProperty Name="PrescriptionTbls" Relationship="Self.Fk2" FromRole="LabTestTbl" ToRole="PrescriptionTbl" />
+        </EntityType>
+        <EntityType Name="PatientTbl">
+          <Key>
+            <PropertyRef Name="PatId" />
+          </Key>
+          <Property Name="PatId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PatName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PatPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PatGen" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PatDob" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="PatAdd" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PatAllergies" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Addby" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ReceptionistTbl" Relationship="Self.Fk4" FromRole="PatientTbl" ToRole="ReceptionistTbl" />
+          <NavigationProperty Name="PrescriptionTbls" Relationship="Self.Fk6" FromRole="PatientTbl" ToRole="PrescriptionTbl" />
+        </EntityType>
+        <EntityType Name="PrescriptionTbl">
+          <Key>
+            <PropertyRef Name="PrescId" />
+          </Key>
+          <Property Name="PrescId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Doctor" Type="Int32" Nullable="false" />
+          <Property Name="Patient" Type="Int32" Nullable="false" />
+          <Property Name="Medicines" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LabTest" Type="Int32" Nullable="false" />
+          <Property Name="Cost" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DoctorTbl" Relationship="Self.Fk7" FromRole="PrescriptionTbl" ToRole="DoctorTbl" />
+          <NavigationProperty Name="LabTestTbl" Relationship="Self.Fk2" FromRole="PrescriptionTbl" ToRole="LabTestTbl" />
+          <NavigationProperty Name="PatientTbl" Relationship="Self.Fk6" FromRole="PrescriptionTbl" ToRole="PatientTbl" />
+        </EntityType>
+        <EntityType Name="ReceptionistTbl">
+          <Key>
+            <PropertyRef Name="RecId" />
+          </Key>
+          <Property Name="RecId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RecEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RecAdd" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RecPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RecPassword" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="PatientTbls" Relationship="Self.Fk4" FromRole="ReceptionistTbl" ToRole="PatientTbl" />
+        </EntityType>
+        <Association Name="Fk7">
+          <End Role="DoctorTbl" Type="Self.DoctorTbl" Multiplicity="1" />
+          <End Role="PrescriptionTbl" Type="Self.PrescriptionTbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DoctorTbl">
+              <PropertyRef Name="DocId" />
+            </Principal>
+            <Dependent Role="PrescriptionTbl">
+              <PropertyRef Name="Doctor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk1">
+          <End Role="LaboratorianTbl" Type="Self.LaboratorianTbl" Multiplicity="1" />
+          <End Role="LabTestTbl" Type="Self.LabTestTbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LaboratorianTbl">
+              <PropertyRef Name="LabId" />
+            </Principal>
+            <Dependent Role="LabTestTbl">
+              <PropertyRef Name="AddBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk2">
+          <End Role="LabTestTbl" Type="Self.LabTestTbl" Multiplicity="1" />
+          <End Role="PrescriptionTbl" Type="Self.PrescriptionTbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LabTestTbl">
+              <PropertyRef Name="TestId" />
+            </Principal>
+            <Dependent Role="PrescriptionTbl">
+              <PropertyRef Name="LabTest" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk4">
+          <End Role="ReceptionistTbl" Type="Self.ReceptionistTbl" Multiplicity="1" />
+          <End Role="PatientTbl" Type="Self.PatientTbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReceptionistTbl">
+              <PropertyRef Name="RecId" />
+            </Principal>
+            <Dependent Role="PatientTbl">
+              <PropertyRef Name="Addby" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk6">
+          <End Role="PatientTbl" Type="Self.PatientTbl" Multiplicity="1" />
+          <End Role="PrescriptionTbl" Type="Self.PrescriptionTbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PatientTbl">
+              <PropertyRef Name="PatId" />
+            </Principal>
+            <Dependent Role="PrescriptionTbl">
+              <PropertyRef Name="Patient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="clinicEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DoctorTbls" EntityType="Self.DoctorTbl" />
+          <EntitySet Name="LaboratorianTbls" EntityType="Self.LaboratorianTbl" />
+          <EntitySet Name="LabTestTbls" EntityType="Self.LabTestTbl" />
+          <EntitySet Name="PatientTbls" EntityType="Self.PatientTbl" />
+          <EntitySet Name="PrescriptionTbls" EntityType="Self.PrescriptionTbl" />
+          <EntitySet Name="ReceptionistTbls" EntityType="Self.ReceptionistTbl" />
+          <AssociationSet Name="Fk7" Association="Self.Fk7">
+            <End Role="DoctorTbl" EntitySet="DoctorTbls" />
+            <End Role="PrescriptionTbl" EntitySet="PrescriptionTbls" />
+          </AssociationSet>
+          <AssociationSet Name="Fk1" Association="Self.Fk1">
+            <End Role="LaboratorianTbl" EntitySet="LaboratorianTbls" />
+            <End Role="LabTestTbl" EntitySet="LabTestTbls" />
+          </AssociationSet>
+          <AssociationSet Name="Fk2" Association="Self.Fk2">
+            <End Role="LabTestTbl" EntitySet="LabTestTbls" />
+            <End Role="PrescriptionTbl" EntitySet="PrescriptionTbls" />
+          </AssociationSet>
+          <AssociationSet Name="Fk4" Association="Self.Fk4">
+            <End Role="ReceptionistTbl" EntitySet="ReceptionistTbls" />
+            <End Role="PatientTbl" EntitySet="PatientTbls" />
+          </AssociationSet>
+          <AssociationSet Name="Fk6" Association="Self.Fk6">
+            <End Role="PatientTbl" EntitySet="PatientTbls" />
+            <End Role="PrescriptionTbl" EntitySet="PrescriptionTbls" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="clinicModelStoreContainer" CdmEntityContainer="clinicEntities1">
+          <EntitySetMapping Name="DoctorTbls">
+            <EntityTypeMapping TypeName="clinicModel.DoctorTbl">
+              <MappingFragment StoreEntitySet="DoctorTbl">
+                <ScalarProperty Name="DocId" ColumnName="DocId" />
+                <ScalarProperty Name="DocName" ColumnName="DocName" />
+                <ScalarProperty Name="DocPhone" ColumnName="DocPhone" />
+                <ScalarProperty Name="DocExp" ColumnName="DocExp" />
+                <ScalarProperty Name="DocSpec" ColumnName="DocSpec" />
+                <ScalarProperty Name="DocGen" ColumnName="DocGen" />
+                <ScalarProperty Name="DocAdd" ColumnName="DocAdd" />
+                <ScalarProperty Name="DocDob" ColumnName="DocDob" />
+                <ScalarProperty Name="DocPass" ColumnName="DocPass" />
+                <ScalarProperty Name="DocEmail" ColumnName="DocEmail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LaboratorianTbls">
+            <EntityTypeMapping TypeName="clinicModel.LaboratorianTbl">
+              <MappingFragment StoreEntitySet="LaboratorianTbl">
+                <ScalarProperty Name="LabId" ColumnName="LabId" />
+                <ScalarProperty Name="LabName" ColumnName="LabName" />
+                <ScalarProperty Name="LabEmail" ColumnName="LabEmail" />
+                <ScalarProperty Name="LabPass" ColumnName="LabPass" />
+                <ScalarProperty Name="LabPhone" ColumnName="LabPhone" />
+                <ScalarProperty Name="LabAddress" ColumnName="LabAddress" />
+                <ScalarProperty Name="LabGen" ColumnName="LabGen" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LabTestTbls">
+            <EntityTypeMapping TypeName="clinicModel.LabTestTbl">
+              <MappingFragment StoreEntitySet="LabTestTbl">
+                <ScalarProperty Name="TestId" ColumnName="TestId" />
+                <ScalarProperty Name="TestName" ColumnName="TestName" />
+                <ScalarProperty Name="TestCost" ColumnName="TestCost" />
+                <ScalarProperty Name="AddBy" ColumnName="AddBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PatientTbls">
+            <EntityTypeMapping TypeName="clinicModel.PatientTbl">
+              <MappingFragment StoreEntitySet="PatientTbl">
+                <ScalarProperty Name="PatId" ColumnName="PatId" />
+                <ScalarProperty Name="PatName" ColumnName="PatName" />
+                <ScalarProperty Name="PatPhone" ColumnName="PatPhone" />
+                <ScalarProperty Name="PatGen" ColumnName="PatGen" />
+                <ScalarProperty Name="PatDob" ColumnName="PatDob" />
+                <ScalarProperty Name="PatAdd" ColumnName="PatAdd" />
+                <ScalarProperty Name="PatAllergies" ColumnName="PatAllergies" />
+                <ScalarProperty Name="Addby" ColumnName="Addby" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PrescriptionTbls">
+            <EntityTypeMapping TypeName="clinicModel.PrescriptionTbl">
+              <MappingFragment StoreEntitySet="PrescriptionTbl">
+                <ScalarProperty Name="PrescId" ColumnName="PrescId" />
+                <ScalarProperty Name="Doctor" ColumnName="Doctor" />
+                <ScalarProperty Name="Patient" ColumnName="Patient" />
+                <ScalarProperty Name="Medicines" ColumnName="Medicines" />
+                <ScalarProperty Name="LabTest" ColumnName="LabTest" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReceptionistTbls">
+            <EntityTypeMapping TypeName="clinicModel.ReceptionistTbl">
+              <MappingFragment StoreEntitySet="ReceptionistTbl">
+                <ScalarProperty Name="RecId" ColumnName="RecId" />
+                <ScalarProperty Name="RecName" ColumnName="RecName" />
+                <ScalarProperty Name="RecEmail" ColumnName="RecEmail" />
+                <ScalarProperty Name="RecAdd" ColumnName="RecAdd" />
+                <ScalarProperty Name="RecPhone" ColumnName="RecPhone" />
+                <ScalarProperty Name="RecPassword" ColumnName="RecPassword" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
